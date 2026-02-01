@@ -16,8 +16,8 @@ export interface PostWithAuthor {
   content: string | null;
   published: boolean;
   authorId: string;
-  createdAt: Date;
-  updatedAt: Date;
+  createdTime: Date;
+  updatedTime: Date;
   author: {
     id: string;
     username: string | null;
@@ -87,7 +87,7 @@ export class PostService {
             },
           },
         },
-        orderBy: { createdAt: 'desc' },
+        orderBy: { createdTime: 'desc' },
       }),
       this.prisma.post.count({ where }),
     ]);
@@ -145,7 +145,7 @@ export class PostService {
         where: { authorId },
         skip,
         take: limit,
-        orderBy: { createdAt: 'desc' },
+        orderBy: { createdTime: 'desc' },
       }),
       this.prisma.post.count({ where: { authorId } }),
     ]);

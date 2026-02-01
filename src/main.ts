@@ -27,7 +27,7 @@ async function bootstrap() {
       forbidNonWhitelisted: true, // 如果有非白名单属性则抛出错误
       transform: true, // 自动转换类型
       transformOptions: {
-        enableImplicitConversion: true,
+        enableImplicitConversion: true, // 启用隐式类型转换
       },
     }),
   );
@@ -37,8 +37,8 @@ async function bootstrap() {
 
   // 启用 CORS
   app.enableCors({
-    origin: true,
-    credentials: true,
+    origin: true, // 允许所有来源
+    credentials: true, // 允许携带凭证
   });
 
   const port = configService.get<number>('port', 3000);

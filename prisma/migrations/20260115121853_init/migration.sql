@@ -8,10 +8,10 @@ CREATE TABLE "users" (
     "password" TEXT NOT NULL,
     "username" TEXT,
     "avatar" TEXT,
-    "isActive" BOOLEAN NOT NULL DEFAULT true,
+    "is_active" BOOLEAN NOT NULL DEFAULT true,
     "role" "Role" NOT NULL DEFAULT 'USER',
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP(3) NOT NULL,
+    "created_time" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updated_time" TIMESTAMP(3) NOT NULL,
 
     CONSTRAINT "users_pkey" PRIMARY KEY ("id")
 );
@@ -20,9 +20,9 @@ CREATE TABLE "users" (
 CREATE TABLE "refresh_tokens" (
     "id" TEXT NOT NULL,
     "token" TEXT NOT NULL,
-    "userId" TEXT NOT NULL,
-    "expiresAt" TIMESTAMP(3) NOT NULL,
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "user_id" TEXT NOT NULL,
+    "expires_time" TIMESTAMP(3) NOT NULL,
+    "created_time" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT "refresh_tokens_pkey" PRIMARY KEY ("id")
 );
@@ -33,9 +33,9 @@ CREATE TABLE "posts" (
     "title" TEXT NOT NULL,
     "content" TEXT,
     "published" BOOLEAN NOT NULL DEFAULT false,
-    "authorId" TEXT NOT NULL,
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP(3) NOT NULL,
+    "author_id" TEXT NOT NULL,
+    "created_time" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updated_time" TIMESTAMP(3) NOT NULL,
 
     CONSTRAINT "posts_pkey" PRIMARY KEY ("id")
 );
@@ -47,7 +47,7 @@ CREATE UNIQUE INDEX "users_email_key" ON "users"("email");
 CREATE UNIQUE INDEX "refresh_tokens_token_key" ON "refresh_tokens"("token");
 
 -- AddForeignKey
-ALTER TABLE "refresh_tokens" ADD CONSTRAINT "refresh_tokens_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "refresh_tokens" ADD CONSTRAINT "refresh_tokens_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "posts" ADD CONSTRAINT "posts_authorId_fkey" FOREIGN KEY ("authorId") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "posts" ADD CONSTRAINT "posts_author_id_fkey" FOREIGN KEY ("author_id") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;

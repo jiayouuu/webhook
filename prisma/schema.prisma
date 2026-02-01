@@ -3,6 +3,7 @@
 
 generator client {
   provider = "prisma-client-js"
+  binaryTargets = ["native", "debian-openssl-3.0.x"]
 }
 
 datasource db {
@@ -11,30 +12,30 @@ datasource db {
 
 // 用户表
 model User {
-  id        String   @id @default(uuid())
-  email     String   @unique
-  password  String
-  username  String?
-  avatar    String?
-  isActive  Boolean  @default(true)
-  role      Role     @default(USER)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id          String   @id @default(uuid())
+  email       String   @unique
+  password    String
+  username    String?
+  avatar      String?
+  isActive    Boolean  @default(true) @map("is_active")
+  role        Role     @default(USER)
+  createdTime DateTime @default(now()) @map("created_time")
+  updatedTime DateTime @updatedAt @map("updated_time")
 
   // 关联
-  posts     Post[]
-  tokens    RefreshToken[]
+  posts  Post[]
+  tokens RefreshToken[]
 
   @@map("users")
 }
 
 // 刷新令牌表（用于 JWT 刷新）
 model RefreshToken {
-  id        String   @id @default(uuid())
-  token     String   @unique
-  userId    String
-  expiresAt DateTime
-  createdAt DateTime @default(now())
+  id          String   @id @default(uuid())
+  token       String   @unique
+  userId      String   @map("user_id")
+  expiresTime DateTime @map("expires_time")
+  createdTime DateTime @default(now()) @map("created_time")
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
@@ -47,13 +48,30 @@ model Post {
   title       String
   content     String?
   published   Boolean  @default(false)
-  authorId    String
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  authorId    String   @map("author_id")
+  createdTime DateTime @default(now()) @map("created_time")
+  updatedTime DateTime @updatedAt @map("updated_time")
 
   author User @relation(fields: [authorId], references: [id], onDelete: Cascade)
 
   @@map("posts")
+}
+
+// node 版本
+
+model nvm_version {
+  id   Int    @id @default(autoincrement())
+  name String
+
+  @@map("nvm_versions")
+}
+
+// 包管理工具
+model package_manager {
+  id   Int    @id @default(autoincrement())
+  name String
+
+  @@map("pkg_mgrs")
 }
 
 // 用户角色枚举

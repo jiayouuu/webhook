@@ -45,7 +45,7 @@ export class AuthService {
         email: true,
         username: true,
         role: true,
-        createdAt: true,
+        createdTime: true,
       },
     });
 
@@ -116,7 +116,7 @@ export class AuthService {
         where: {
           userId: payload.sub,
           token: refreshToken,
-          expiresAt: { gt: new Date() },
+          expiresTime: { gt: new Date() },
         },
       });
 
@@ -140,7 +140,7 @@ export class AuthService {
 
       // 将旧 token 加入黑名单
       const ttl = Math.floor(
-        (storedToken.expiresAt.getTime() - Date.now()) / 1000,
+        (storedToken.expiresTime.getTime() - Date.now()) / 1000,
       );
       if (ttl > 0) {
         await this.redisService.set(`blacklist:${refreshToken}`, '1', ttl);
@@ -202,14 +202,14 @@ export class AuthService {
     ]);
 
     // 计算过期时间
-    const expiresAt = new Date(Date.now() + refreshExpiresInSeconds * 1000);
+    const expiresTime = new Date(Date.now() + refreshExpiresInSeconds * 1000);
 
     // 存储 refresh token 到数据库
     await this.prisma.refreshToken.create({
       data: {
         token: refreshToken,
         userId,
-        expiresAt,
+        expiresTime,
       },
     });
 

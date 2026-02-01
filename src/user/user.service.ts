@@ -19,8 +19,8 @@ export interface UserInfo {
   avatar: string | null;
   role: Role;
   isActive: boolean;
-  createdAt: Date;
-  updatedAt?: Date;
+  createdTime: Date;
+  updatedTime?: Date;
 }
 
 @Injectable()
@@ -47,9 +47,9 @@ export class UserService {
           avatar: true,
           role: true,
           isActive: true,
-          createdAt: true,
+          createdTime: true,
         },
-        orderBy: { createdAt: 'desc' },
+        orderBy: { createdTime: 'desc' },
       }),
       this.prisma.user.count(),
     ]);
@@ -75,8 +75,8 @@ export class UserService {
         avatar: true,
         role: true,
         isActive: true,
-        createdAt: true,
-        updatedAt: true,
+        createdTime: true,
+        updatedTime: true,
       },
     });
 
@@ -108,7 +108,7 @@ export class UserService {
         username: true,
         avatar: true,
         role: true,
-        updatedAt: true,
+        updatedTime: true,
       },
     });
 
