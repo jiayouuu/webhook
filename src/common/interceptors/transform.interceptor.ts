@@ -11,7 +11,6 @@ export interface Response<T> {
   code: number;
   data: T;
   message: string;
-  timestamp: string;
 }
 
 @Injectable()
@@ -25,10 +24,9 @@ export class TransformInterceptor<T> implements NestInterceptor<
   ): Observable<Response<T>> {
     return next.handle().pipe(
       map((data: T) => ({
-        code: 0,
+        code: 200,
         data,
         message: 'success',
-        timestamp: new Date().toISOString(),
       })),
     );
   }

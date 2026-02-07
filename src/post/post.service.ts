@@ -60,97 +60,83 @@ export class PostService {
   }
 
   async findAll(pagination: PaginationDto, onlyPublished = true) {
-    const { page = 1, limit = 10 } = pagination;
-    const skip = (page - 1) * limit;
-    const cacheKey = `${this.CACHE_LIST_KEY}:${page}:${limit}:${onlyPublished}`;
+    const { pageNum = 1, pageSize = 10 } = pagination;
+    const skip = (pageNum - 1) * pageSize;
+    const cacheKey = `${this.CACHE_LIST_KEY}:${pageNum}:${pageSize}:${onlyPublished}`;
+    return this.redisService.getOrSet(
+      cacheKey,
+      async () => {
+        const where = onlyPublished ? { published: true } : {};
 
-    // 尝试从缓存获取
-    const cached =
-      await this.redisService.getJson<PaginatedResult<any>>(cacheKey);
-    if (cached) {
-      return cached;
-    }
-
-    const where = onlyPublished ? { published: true } : {};
-
-    const [posts, total] = await Promise.all([
-      this.prisma.post.findMany({
-        where,
-        skip,
-        take: limit,
-        include: {
-          author: {
-            select: {
-              id: true,
-              username: true,
-              email: true,
+        const [posts, total] = await Promise.all([
+          this.prisma.post.findMany({
+            where,
+            skip,
+            take: pageSize,
+            include: {
+              author: {
+                select: {
+                  id: true,
+                  username: true,
+                  email: true,
+                },
+              },
             },
-          },
-        },
-        orderBy: { createdTime: 'desc' },
-      }),
-      this.prisma.post.count({ where }),
-    ]);
+            orderBy: { createdTime: 'desc' },
+          }),
+          this.prisma.post.count({ where }),
+        ]);
 
-    const result = new PaginatedResult(posts, total, page, limit);
-
-    // 缓存结果
-    await this.redisService.setJson(cacheKey, result, this.CACHE_TTL);
-
-    return result;
+        return new PaginatedResult(posts, total, pageNum, pageSize);
+      },
+      this.CACHE_TTL,
+    );
   }
 
   async findById(id: string): Promise<PostWithAuthor> {
-    // 尝试从缓存获取
-    const cached = await this.redisService.getJson<PostWithAuthor>(
-      `${this.CACHE_PREFIX}${id}`,
-    );
-    if (cached) {
-      return cached;
-    }
+    const cacheKey = `${this.CACHE_PREFIX}${id}`;
 
-    const post = await this.prisma.post.findUnique({
-      where: { id },
-      include: {
-        author: {
-          select: {
-            id: true,
-            username: true,
-            email: true,
+    return this.redisService.getOrSet(
+      cacheKey,
+      async () => {
+        const post = await this.prisma.post.findUnique({
+          where: { id },
+          include: {
+            author: {
+              select: {
+                id: true,
+                username: true,
+                email: true,
+              },
+            },
           },
-        },
+        });
+
+        if (!post) {
+          throw new NotFoundException('文章不存在');
+        }
+
+        return post;
       },
-    });
-
-    if (!post) {
-      throw new NotFoundException('文章不存在');
-    }
-
-    // 缓存文章
-    await this.redisService.setJson(
-      `${this.CACHE_PREFIX}${id}`,
-      post,
       this.CACHE_TTL,
     );
-
-    return post;
   }
 
   async findByAuthor(authorId: string, pagination: PaginationDto) {
-    const { page = 1, limit = 10 } = pagination;
-    const skip = (page - 1) * limit;
+    const { pageNum = 1, pageSize = 10 } = pagination;
+    const skip = (pageNum - 1) * pageSize;
 
     const [posts, total] = await Promise.all([
       this.prisma.post.findMany({
         where: { authorId },
         skip,
-        take: limit,
+        take: pageSize,
         orderBy: { createdTime: 'desc' },
       }),
       this.prisma.post.count({ where: { authorId } }),
     ]);
 
-    return new PaginatedResult(posts, total, page, limit);
+    return new PaginatedResult(posts, total, pageNum, pageSize);
   }
 
   async update(id: string, userId: string, userRole: Role, dto: UpdatePostDto) {

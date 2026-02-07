@@ -6,32 +6,32 @@ export class PaginationDto {
   @Type(() => Number)
   @IsInt()
   @Min(1)
-  page?: number = 1;
+  pageNum?: number = 1;
 
   @IsOptional()
   @Type(() => Number)
   @IsInt()
   @Min(1)
   @Max(100)
-  limit?: number = 10;
+  pageSize?: number = 10;
 }
 
 export class PaginatedResult<T> {
-  data: T[];
-  meta: {
+  list: T[];
+  pageInfo: {
     total: number;
-    page: number;
-    limit: number;
+    pageNum: number;
+    pageSize: number;
     totalPages: number;
   };
 
-  constructor(data: T[], total: number, page: number, limit: number) {
-    this.data = data;
-    this.meta = {
+  constructor(list: T[], total: number, pageNum: number, pageSize: number) {
+    this.list = list;
+    this.pageInfo = {
       total,
-      page,
-      limit,
-      totalPages: Math.ceil(total / limit),
+      pageNum,
+      pageSize,
+      totalPages: Math.ceil(total / pageSize),
     };
   }
 }
