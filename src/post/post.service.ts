@@ -20,7 +20,7 @@ export interface PostWithAuthor {
   updatedTime: Date;
   author: {
     id: string;
-    username: string | null;
+    nickname: string | null;
     email: string;
   };
 }
@@ -46,7 +46,7 @@ export class PostService {
         author: {
           select: {
             id: true,
-            username: true,
+            nickname: true,
             email: true,
           },
         },
@@ -77,7 +77,7 @@ export class PostService {
               author: {
                 select: {
                   id: true,
-                  username: true,
+                  nickname: true,
                   email: true,
                 },
               },
@@ -105,7 +105,7 @@ export class PostService {
             author: {
               select: {
                 id: true,
-                username: true,
+                nickname: true,
                 email: true,
               },
             },
@@ -160,7 +160,7 @@ export class PostService {
         author: {
           select: {
             id: true,
-            username: true,
+            nickname: true,
             email: true,
           },
         },

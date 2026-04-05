@@ -83,3 +83,56 @@ bun run test:cov           # 测试覆盖率
 bun run lint               # 检查代码
 bun run format             # 格式化代码
 ```
+
+## 认证验证码接口
+
+### 1. 发送注册邮箱验证码
+
+- `POST /api/v1/auth/email-code`
+- 请求体：
+
+```json
+{
+  "email": "user@example.com"
+}
+```
+
+### 2. 获取登录图形验证码
+
+- `GET /api/v1/auth/captcha`
+- 响应：
+
+```json
+{
+  "captchaId": "uuid",
+  "captchaImage": "data:image/svg+xml;base64,...",
+  "expiresIn": 120
+}
+```
+
+### 3. 注册（需要邮箱验证码）
+
+- `POST /api/v1/auth/register`
+- 请求体：
+
+```json
+{
+  "email": "user@example.com",
+  "password": "123456",
+  "emailCode": "123456"
+}
+```
+
+### 4. 登录（需要图形验证码）
+
+- `POST /api/v1/auth/login`
+- 请求体：
+
+```json
+{
+  "email": "user@example.com",
+  "password": "123456",
+  "captchaId": "uuid",
+  "captchaCode": "ABCD"
+}
+```

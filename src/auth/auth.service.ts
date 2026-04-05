@@ -1,15 +1,18 @@
 import {
   Injectable,
   ConflictException,
+  BadRequestException,
   UnauthorizedException,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcryptjs';
+import { randomInt } from 'crypto';
 import { PrismaService } from '../prisma/prisma.service';
 import { RedisService } from '../redis/redis.service';
 import { RegisterDto, LoginDto } from './dto';
 import { JwtPayload } from './strategies/jwt.strategy';
+import { CaptchaService } from './captcha.service';
 
 @Injectable()
 export class AuthService {
@@ -18,7 +21,23 @@ export class AuthService {
     private readonly jwtService: JwtService,
     private readonly configService: ConfigService,
     private readonly redisService: RedisService,
+    private readonly captchaService: CaptchaService,
   ) {}
+
+  async sendRegisterEmailCode(email: string) {
+    const existingUser = await this.prisma.user.findUnique({
+      where: { email },
+    });
+    if (existingUser) {
+      throw new ConflictException('该邮箱已被注册');
+    }
+
+    return this.captchaService.sendRegisterEmailCode(email);
+  }
+
+  async getLoginCaptcha() {
+    return this.captchaService.generateLoginCaptcha();
+  }
 
   async register(dto: RegisterDto) {
     // 检查邮箱是否已存在
@@ -30,6 +49,15 @@ export class AuthService {
       throw new ConflictException('该邮箱已被注册');
     }
 
+    // 校验邮箱验证码
+    const isEmailCodeValid = await this.captchaService.verifyRegisterEmailCode(
+      dto.email,
+      dto.emailCode,
+    );
+    if (!isEmailCodeValid) {
+      throw new BadRequestException('邮箱验证码错误或已过期');
+    }
+
     // 加密密码
     const hashedPassword = await bcrypt.hash(dto.password, 10);
 
@@ -38,12 +66,12 @@ export class AuthService {
       data: {
         email: dto.email,
         password: hashedPassword,
-        username: dto.username,
+        nickname: this.generateDefaultNickname(dto.email),
       },
       select: {
         id: true,
         email: true,
-        username: true,
+        nickname: true,
         role: true,
         createdTime: true,
       },
@@ -59,6 +87,15 @@ export class AuthService {
   }
 
   async login(dto: LoginDto) {
+    // 校验图形验证码
+    const isCaptchaValid = await this.captchaService.verifyLoginCaptcha(
+      dto.captchaId,
+      dto.captchaCode,
+    );
+    if (!isCaptchaValid) {
+      throw new BadRequestException('图形验证码错误或已过期');
+    }
+
     // 查找用户
     const user = await this.prisma.user.findUnique({
       where: { email: dto.email },
@@ -86,7 +123,7 @@ export class AuthService {
       user: {
         id: user.id,
         email: user.email,
-        username: user.username,
+        nickname: user.nickname,
         role: user.role,
       },
       ...tokens,
@@ -239,5 +276,13 @@ export class AuthService {
       default:
         return 3600;
     }
+  }
+
+  private generateDefaultNickname(email: string): string {
+    const local = email.split('@')[0] || 'user';
+    const safePrefix =
+      local.replace(/[^a-zA-Z0-9_]/g, '').slice(0, 12) || 'user';
+    const suffix = String(randomInt(1000, 10000));
+    return `${safePrefix}_${suffix}`;
   }
 }

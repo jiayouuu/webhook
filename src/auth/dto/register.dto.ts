@@ -10,7 +10,7 @@ export class RegisterDto {
   password!: string;
 
   @IsString()
-  @MinLength(2, { message: '用户名至少2个字符' })
-  @MaxLength(20, { message: '用户名最多20个字符' })
-  username!: string;
+  @MinLength(6, { message: '邮箱验证码为6位数字' })
+  @MaxLength(6, { message: '邮箱验证码为6位数字' })
+  emailCode!: string;
 }

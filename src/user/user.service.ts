@@ -15,7 +15,7 @@ import { Role } from '@prisma/client';
 export interface UserInfo {
   id: string;
   email: string;
-  username: string | null;
+  nickname: string | null;
   avatar: string | null;
   role: Role;
   isActive: boolean;
@@ -43,7 +43,7 @@ export class UserService {
         select: {
           id: true,
           email: true,
-          username: true,
+          nickname: true,
           avatar: true,
           role: true,
           isActive: true,
@@ -71,7 +71,7 @@ export class UserService {
       select: {
         id: true,
         email: true,
-        username: true,
+        nickname: true,
         avatar: true,
         role: true,
         isActive: true,
@@ -105,7 +105,7 @@ export class UserService {
       select: {
         id: true,
         email: true,
-        username: true,
+        nickname: true,
         avatar: true,
         role: true,
         updatedTime: true,
@@ -162,7 +162,7 @@ export class UserService {
       select: {
         id: true,
         email: true,
-        username: true,
+        nickname: true,
         role: true,
       },
     });
@@ -199,7 +199,7 @@ export class UserService {
       select: {
         id: true,
         email: true,
-        username: true,
+        nickname: true,
         isActive: true,
       },
     });

@@ -1,19 +1,38 @@
 import {
   Controller,
   Post,
+  Get,
   Body,
   HttpCode,
   HttpStatus,
   UseGuards,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { RegisterDto, LoginDto, RefreshTokenDto } from './dto';
+import {
+  RegisterDto,
+  LoginDto,
+  RefreshTokenDto,
+  SendEmailCodeDto,
+} from './dto';
 import { Public, CurrentUser } from '../common/decorators';
 import { JwtAuthGuard } from './guards';
 
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
+
+  @Public()
+  @Post('email-code')
+  @HttpCode(HttpStatus.OK)
+  async sendRegisterEmailCode(@Body() dto: SendEmailCodeDto) {
+    return this.authService.sendRegisterEmailCode(dto.email);
+  }
+
+  @Public()
+  @Get('captcha')
+  async getLoginCaptcha() {
+    return this.authService.getLoginCaptcha();
+  }
 
   @Public()
   @Post('register')

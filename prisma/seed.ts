@@ -19,7 +19,7 @@ async function main() {
     create: {
       email: 'admin@example.com',
       password: adminPassword,
-      username: 'Admin',
+      nickname: 'Admin',
       role: Role.SUPER_ADMIN,
     },
   });
@@ -33,7 +33,7 @@ async function main() {
     create: {
       email: 'user@example.com',
       password: userPassword,
-      username: 'TestUser',
+      nickname: 'TestUser',
       role: Role.USER,
     },
   });

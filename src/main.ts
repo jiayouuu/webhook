@@ -19,6 +19,11 @@ async function bootstrap() {
   );
 
   const configService = app.get(ConfigService);
+  const globalPrefix = configService.get<string>('app.globalPrefix', 'api/v1');
+  const corsAllowedOrigins = configService.get<string>(
+    'cors.allowedOrigins',
+    '*',
+  );
 
   // 全局验证管道
   app.useGlobalPipes(
@@ -33,18 +38,34 @@ async function bootstrap() {
   );
 
   // 全局前缀
-  app.setGlobalPrefix('api/v1');
+  app.setGlobalPrefix(globalPrefix);
 
   // 启用 CORS
   app.enableCors({
-    origin: true, // 允许所有来源
+    origin: parseCorsOrigins(corsAllowedOrigins),
     credentials: true, // 允许携带凭证
   });
 
   const port = configService.get<number>('port', 3000);
   await app.listen(port, '0.0.0.0');
 
-  logger.log(`🚀 Application is running on: http://localhost:${port}/api/v1`);
+  logger.log(
+    `🚀 Application is running on: http://localhost:${port}/${globalPrefix}`,
+  );
+}
+
+function parseCorsOrigins(value: string): boolean | string[] {
+  const normalized = value.trim();
+  if (!normalized || normalized === '*') {
+    return true;
+  }
+
+  const origins = normalized
+    .split(',')
+    .map((item) => item.trim())
+    .filter(Boolean);
+
+  return origins.length > 0 ? origins : true;
 }
 
 void bootstrap();
