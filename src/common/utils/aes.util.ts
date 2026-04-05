@@ -56,18 +56,11 @@ export function decryptAES(cipherText: string): string {
 
 export function strictDecryptAES(key: string, value: unknown): unknown {
   if (typeof value !== 'string' || value.length === 0) {
-    return value;
+    throw new BadRequestException(`参数${key}必须为加密字符串`);
   }
 
   try {
-    const decrypted = decryptAES(value);
-    const reEncrypted = encryptAES(decrypted);
-
-    if (reEncrypted !== value) {
-      throw new Error('Invalid AES payload');
-    }
-
-    return decrypted;
+    return decryptAES(value);
   } catch {
     throw new BadRequestException(`参数${key}必须为加密字符串`);
   }
