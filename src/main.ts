@@ -3,7 +3,12 @@ import {
   FastifyAdapter,
   NestFastifyApplication,
 } from '@nestjs/platform-fastify';
-import { ValidationPipe, Logger } from '@nestjs/common';
+import {
+  ValidationPipe,
+  Logger,
+  BadRequestException,
+  ValidationError,
+} from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { AppModule } from './app.module';
 
@@ -34,6 +39,8 @@ async function bootstrap() {
       transformOptions: {
         enableImplicitConversion: true, // 启用隐式类型转换
       },
+      exceptionFactory: (errors: ValidationError[]) =>
+        new BadRequestException(getFirstValidationMessage(errors)),
     }),
   );
 
@@ -66,6 +73,30 @@ function parseCorsOrigins(value: string): boolean | string[] {
     .filter(Boolean);
 
   return origins.length > 0 ? origins : true;
+}
+
+function getFirstValidationMessage(errors: ValidationError[]): string {
+  const queue = [...errors];
+
+  while (queue.length > 0) {
+    const current = queue.shift();
+    if (!current) {
+      continue;
+    }
+
+    if (current.constraints) {
+      const firstMessage = Object.values(current.constraints)[0];
+      if (typeof firstMessage === 'string' && firstMessage.trim()) {
+        return firstMessage;
+      }
+    }
+
+    if (current.children?.length) {
+      queue.unshift(...current.children);
+    }
+  }
+
+  return 'Validation failed';
 }
 
 void bootstrap();

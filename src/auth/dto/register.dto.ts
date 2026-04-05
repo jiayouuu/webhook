@@ -1,4 +1,10 @@
-import { IsEmail, IsString, MinLength, MaxLength } from 'class-validator';
+import {
+  IsEmail,
+  IsString,
+  MinLength,
+  MaxLength,
+  Length,
+} from 'class-validator';
 
 export class RegisterDto {
   @IsEmail({}, { message: '请输入有效的邮箱地址' })
@@ -10,7 +16,6 @@ export class RegisterDto {
   password!: string;
 
   @IsString()
-  @MinLength(6, { message: '邮箱验证码为6位数字' })
-  @MaxLength(6, { message: '邮箱验证码为6位数字' })
+  @Length(6, 6, { message: '邮箱验证码长度应为6位' })
   emailCode!: string;
 }

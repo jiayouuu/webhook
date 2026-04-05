@@ -1,4 +1,10 @@
-import { IsEmail, IsString, MinLength, MaxLength } from 'class-validator';
+import {
+  IsEmail,
+  IsString,
+  MinLength,
+  MaxLength,
+  Length,
+} from 'class-validator';
 
 export class LoginDto {
   @IsEmail({}, { message: '请输入有效的邮箱地址' })
@@ -10,8 +16,7 @@ export class LoginDto {
   password!: string;
 
   @IsString()
-  @MinLength(4, { message: '图形验证码长度错误' })
-  @MaxLength(64, { message: '图形验证码长度错误' })
+  @Length(4, 4, { message: '图形验证码长度应为4位' })
   captchaCode!: string;
 
   @IsString()
