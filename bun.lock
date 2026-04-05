@@ -13,10 +13,12 @@
         "@nestjs/platform-fastify": "^11.1.11",
         "@prisma/adapter-pg": "^7.3.0",
         "@prisma/client": "^7.3.0",
+        "@types/crypto-js": "^4.2.2",
         "@types/nodemailer": "^8.0.0",
         "bcryptjs": "^3.0.3",
         "class-transformer": "^0.5.1",
         "class-validator": "^0.14.3",
+        "crypto-js": "^4.2.0",
         "dotenv": "^17.2.3",
         "fastify": "^5.6.2",
         "ioredis": "^5.9.2",
@@ -400,6 +402,8 @@
 
     "@types/cookiejar": ["@types/cookiejar@2.1.5", "https://registry.npmmirror.com/@types/cookiejar/-/cookiejar-2.1.5.tgz", {}, "sha512-he+DHOWReW0nghN24E1WUqM0efK4kI9oTqDm6XmK8ZPe2djZ90BSNdGnIyCLzCPw7/pogPlGbzI2wHGGmi4O/Q=="],
 
+    "@types/crypto-js": ["@types/crypto-js@4.2.2", "https://registry.npmmirror.com/@types/crypto-js/-/crypto-js-4.2.2.tgz", {}, "sha512-sDOLlVbHhXpAUAL0YHDUUwDZf3iN4Bwi4W6a0W0b+QcAezUbRtH4FVb+9J4h+XFPW7l/gQ9F8qC7P+Ec4k8QVQ=="],
+
     "@types/eslint": ["@types/eslint@9.6.1", "https://registry.npmmirror.com/@types/eslint/-/eslint-9.6.1.tgz", { "dependencies": { "@types/estree": "*", "@types/json-schema": "*" } }, "sha512-FXx2pKgId/WyYo2jXw63kk7/+TY7u7AziEJxJAnSFzHlqTAS3Ync6SvgYAN/k4/PQpnnVuzoMuVnByKK2qp0ag=="],
 
     "@types/eslint-scope": ["@types/eslint-scope@3.7.7", "https://registry.npmmirror.com/@types/eslint-scope/-/eslint-scope-3.7.7.tgz", { "dependencies": { "@types/eslint": "*", "@types/estree": "*" } }, "sha512-MzMFlSLBqNF2gcHWO0G1vP/YQyfvrxZ0bF+u7mzUdZ1/xK4A4sru+nraZz5i3iEIk1l1uyicaDVTB4QbbEkAYg=="],
@@ -723,6 +727,8 @@
     "create-require": ["create-require@1.1.1", "https://registry.npmmirror.com/create-require/-/create-require-1.1.1.tgz", {}, "sha512-dcKFX3jn0MpIaXjisoRvexIJVEKzaq7z2rZKxf+MSr9TkdmHmsU4m2lcLojrj/FHl8mk5VxMmYA+ftRkP/3oKQ=="],
 
     "cross-spawn": ["cross-spawn@7.0.6", "https://registry.npmmirror.com/cross-spawn/-/cross-spawn-7.0.6.tgz", { "dependencies": { "path-key": "^3.1.0", "shebang-command": "^2.0.0", "which": "^2.0.1" } }, "sha512-uV2QOWP2nWzsy2aMp8aRibhi9dlzF5Hgh5SHaB9OiTGEyDTiJJyx0uy51QXdyWbtAHNua4XJzUKca3OzKUd3vA=="],
+
+    "crypto-js": ["crypto-js@4.2.0", "https://registry.npmmirror.com/crypto-js/-/crypto-js-4.2.0.tgz", {}, "sha512-KALDyEYgpY+Rlob/iriUtjV6d5Eq+Y191A5g4UqLAi8CyGP9N1+FdVbkc1SxKc2r4YAYqG8JzO2KGL+AizD70Q=="],
 
     "csstype": ["csstype@3.2.3", "https://registry.npmmirror.com/csstype/-/csstype-3.2.3.tgz", {}, "sha512-z1HGKcYy2xA8AGQfwrn0PAy+PB7X/GSj3UVJW9qKyn43xWa+gl5nXmU4qqLMRzWVLFC8KusUX8T/0kCiOYpAIQ=="],
 

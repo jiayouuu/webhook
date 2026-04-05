@@ -25,6 +25,10 @@ export default () => ({
     refreshExpiresIn: process.env.JWT_REFRESH_EXPIRES_IN || '7d',
   },
 
+  aes: {
+    secretKey: process.env.AES_SECRET_KEY || 'simplekey1234567',
+  },
+
   mail: {
     host: process.env.MAIL_HOST,
     port: parseInt(process.env.MAIL_PORT ?? '465', 10),
