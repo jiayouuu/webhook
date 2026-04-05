@@ -8,9 +8,9 @@ module.exports = {
       name: 'webhook',
       script: 'dist/src/main.js',
       interpreter: 'bun',
-      // 多实例模式，充分利用多核 CPU
-      instances: 2, //'max',
-      // cluster 模式，更稳定的零宕机体验
+      // 根据实际情况调整实例数量，单实例适合小型应用，多实例适合高负载应用
+      instances: 1,
+      // fork 模式适合单实例，cluster 模式适合多实例
       exec_mode: 'fork', //'cluster',
       increment_var: 'PORT',
       env: {

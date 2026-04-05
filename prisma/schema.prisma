@@ -57,23 +57,6 @@ model Post {
   @@map("posts")
 }
 
-// node 版本
-
-model nvm_version {
-  id   Int    @id @default(autoincrement())
-  name String
-
-  @@map("nvm_versions")
-}
-
-// 包管理工具
-model package_manager {
-  id   Int    @id @default(autoincrement())
-  name String
-
-  @@map("pkg_mgrs")
-}
-
 // 用户角色枚举
 enum Role {
   USER
