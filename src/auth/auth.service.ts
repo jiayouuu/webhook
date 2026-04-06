@@ -3,6 +3,7 @@ import {
   ConflictException,
   BadRequestException,
   UnauthorizedException,
+  HttpException,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
@@ -185,7 +186,10 @@ export class AuthService {
 
       // 生成新的 tokens
       return this.generateTokens(user.id, user.email, user.role);
-    } catch {
+    } catch (error) {
+      if (error instanceof HttpException) {
+        throw error;
+      }
       throw new UnauthorizedException('Token 刷新失败');
     }
   }
