@@ -7,6 +7,9 @@ export default () => ({
   cors: {
     allowedOrigins: process.env.CORS_ALLOWED_ORIGINS || '*',
   },
+  ws: {
+    path: process.env.WEBSOCKET_PATH || '/ws',
+  },
 
   database: {
     url: process.env.DATABASE_URL,

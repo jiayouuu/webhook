@@ -9,6 +9,7 @@ import { RedisModule } from './redis';
 import { AuthModule, JwtAuthGuard } from './auth';
 import { UserModule } from './user';
 import { PostModule } from './post';
+import { WsModule } from './ws';
 
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import { PostModule } from './post';
     AuthModule,
     UserModule,
     PostModule,
+    WsModule,
   ],
   controllers: [],
   providers: [
