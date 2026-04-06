@@ -283,7 +283,7 @@ export class AuthService {
   }
 
   private generateDefaultNickname(email: string): string {
-    const local = email.split('@')[0] || 'user';
+    const local = email.split('@')[1]?.split('.')[0] || 'user';
     const safePrefix =
       local.replace(/[^a-zA-Z0-9_]/g, '').slice(0, 12) || 'user';
     const suffix = String(randomInt(1000, 10000));
